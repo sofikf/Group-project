@@ -1,7 +1,7 @@
 const btnPopup = document.querySelector('.btnLogin-popup');
-const cover_box = document.querySelector('.cover-box');
+const cover_box = document.querySelector('.cover_box');
 const loginLink = document.querySelector('.login-link');
-const registerLink = document.querySelector('register-link');
+const registerLink = document.querySelector('.register-link');
 const iconClose = document.querySelector('.icon-close');
 
 function activateCoverBox(){

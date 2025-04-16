@@ -22,7 +22,6 @@
     <!-- <h1>My First Pwa!</h1>
     <p>Counter: <span id="counter">0</span> times</p>
     <script src="/js/app.js"></script> -->
-    <input type="checkbox" id="show-login" hidden>
 
     <header>
         <div class="navigation">
@@ -35,7 +34,7 @@
                 <li><a href="#">Home</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact</a></li>
-                <li><label for="show-login" class="btnLogin-popup">Login</label></li>
+                <li><button class="btnLogin-popup">Login</button></li>
             </ul>
         </div>
     </header>
@@ -61,10 +60,52 @@
                     </div>
                     <button type="submit" class="btn">Login</button>
                     <div class="login-register">
-                        <p>Don't have an account? <a href="#" class="register-link">Register</a></p>
+                        <p class="text1">Don't have an account? <a href="#" class="register-link">Register</a></p>
                     </div>
                 </form>
             </div>
+<!-- Registration -->
+            <div class="form-box register">
+                <h2>Register</h2>
+                <form action="#">
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
+                        <input type="text" required>
+                        <label>Username</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
+                        <input type="email" required>
+                        <label>Email</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
+                        <input type="password" required>
+                        <label>Password</label>
+                    </div>
+                    <div class="remember-forgot">
+                        <label><input type="checkbox">Agree to terms & conditions</label>
+                        <a href="#">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn">Register</button>
+                    <div class="login-register">
+                        <p class="text1">Already have an account? <a href="#" class="login-link">Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="footer">
+            <footer>
+                <div class="footer-content">
+                    <p>&copy; 2025</p>
+                    <div class="social-icons">
+                        <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
+                        <a href="#"><ion-icon name="logo-twitter"></ion-icon></a>
+                        <a href="#"><ion-icon name="logo-instagram"></ion-icon></a>
+                        <a href="#"><ion-icon name="logo-linkedin"></ion-icon></a>
+                    </div>
+                </div>
+            </footer>
         </div>
 
     <script src="script.js"></script>
