@@ -73,7 +73,7 @@ if (loginForm) {
             if (data.success) {
                 alert("✅ Login successful!");
                 deactivatePopup();
-                location.reload(); // or redirect as needed
+                location.reload();
             } else {
                 alert("❌ " + data.message);
             }
@@ -83,26 +83,67 @@ if (loginForm) {
     });
 }
 
+// Replace login button with Account dropdown if user is logged in
+// Replace login button with Account dropdown if user is logged in
 window.addEventListener("DOMContentLoaded", async () => {
     try {
-        const res = await fetch("/whoami");
+        const res = await fetch("/whoami", {
+            credentials: "include"
+        });
         const data = await res.json();
 
         const nav = document.querySelector(".navigation ul");
 
         if (data.logged_in) {
-            // Remove login button
             const loginBtn = document.querySelector(".btnLogin-popup");
-            if (loginBtn) {
-                loginBtn.parentElement.remove();
-            }
+            if (loginBtn) loginBtn.parentElement.remove();
 
-            // Add Account link
             const li = document.createElement("li");
-            li.innerHTML = `<a href="/account">Account</a>`;
+            li.innerHTML = `
+                <div class="dropdown" style="position: relative;">
+                    <button class="dropbtn" style="background: none; border: none; color: white; cursor: pointer;">
+                        ${data.username} ▾
+                    </button>
+                    <div class="dropdown-content" style="
+                        display: none;
+                        position: absolute;
+                        right: 0;
+                        background-color: white;
+                        min-width: 120px;
+                        box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+                        z-index: 1000;
+                        border-radius: 4px;
+                    ">
+                        <a href="/account" style="display: block; padding: 10px; color: black; text-decoration: none;">Profile</a>
+                        <a href="#" id="logout-link" style="display: block; padding: 10px; color: black; text-decoration: none;">Logout</a>
+                    </div>
+                </div>
+            `;
             nav.appendChild(li);
+
+            // Hover toggle
+            const dropdown = li.querySelector(".dropdown");
+            const dropdownContent = li.querySelector(".dropdown-content");
+
+            dropdown.addEventListener("mouseenter", () => {
+                dropdownContent.style.display = "block";
+            });
+
+            dropdown.addEventListener("mouseleave", () => {
+                dropdownContent.style.display = "none";
+            });
+
+            // Handle logout via JavaScript
+            document.getElementById("logout-link").addEventListener("click", async (e) => {
+                e.preventDefault();
+                await fetch("/logout", {
+                    method: "GET",
+                    credentials: "include"
+                });
+                window.location.reload();
+            });
         }
     } catch (err) {
-        console.error("Could not check login status:", err);
+        console.error("Login check failed:", err);
     }
 });

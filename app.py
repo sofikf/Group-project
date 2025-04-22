@@ -1,9 +1,9 @@
-from flask import Flask, send_from_directory, request, jsonify
+from flask import Flask, send_from_directory, request, jsonify, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_required, current_user
+from flask_login import LoginManager, login_required, current_user, logout_user
 import os
 
-from extensions import db, login_manager
+from extensions import db, login_manager, bcrypt
 from models import User
 from auth_routes import auth_bp
 
@@ -40,18 +40,42 @@ def serve_static_file(filename):
 def serve_root():
     return send_from_directory(app.static_folder, 'index.html')
 
-# Login status check route
+# Login status check
 @app.route('/whoami')
 def whoami():
     if current_user.is_authenticated:
         return jsonify({'logged_in': True, 'username': current_user.username})
     return jsonify({'logged_in': False})
 
-# Protected account route
-@app.route('/account')
+# Logout route
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect('/')
+
+# Account page route
+@app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    return f"<h1>Welcome, {current_user.username}</h1><p>This is your account page.</p>"
+    if request.method == 'POST':
+        new_username = request.form.get('username')
+        new_email = request.form.get('email')
+
+        if new_username:
+            current_user.username = new_username
+        if new_email:
+            current_user.email = new_email
+
+        db.session.commit()
+        flash('Profile updated successfully!', 'success')
+        return redirect(url_for('account'))
+
+    return render_template(
+        'account.html',
+        username=current_user.username,
+        email=current_user.email
+    )
 
 if __name__ == '__main__':
     with app.app_context():

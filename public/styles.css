@@ -378,13 +378,49 @@ ul li a.active, ul li a:hover{
     color: #05190A;
 }
 
-
-
-
 /* extra stuff */
 .login-register p {
     color: #000000;
     font-size: 1.2em;
     font-family: 'Rubik', sans-serif;
     font-weight: 500;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    color: black;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1000;
+    border-radius: 4px;
+}
+
+.dropdown-content a {
+    padding: 10px 15px;
+    display: block;
+    text-decoration: none;
+    color: black;
+}
+
+.dropdown-content a:hover {
+    background-color: #eee;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }
