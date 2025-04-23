@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    header nav a { margin-right: 15px; }
+    .flashes li.success { color: green; }
+    .flashes li.error { color: red; }
+    .reminder-card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      background: #f9f9f9;
+      position: relative;
+    }
+    .reminder-card form {
+      display: inline;
+    }
+    .reminder-card .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .reminder-card button {
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .reminder-card button.edit {
+      background: #007bff;
+    }
+    .reminder-card button.edit:hover {
+      background: #0056b3;
+    }
+    .reminder-card button:hover {
+      background: darkred;
+    }
+  </style>
+  <script>
+    function populateForm(id, title, description, date, hour, minute, ampm) {
+      document.getElementById('reminder_id').value = id;
+      document.getElementById('title').value = title;
+      document.getElementById('description').value = description;
+      document.getElementById('date').value = date;
+      document.getElementById('hour').value = hour;
+      document.getElementById('minute').value = minute;
+      document.getElementById('ampm').value = ampm;
+    }
+  </script>
+</head>
+<body>
+<header>
+  <h1>Hello, {{ username }}!</h1>
+  <nav>
+    <a href="/">← Home</a>
+    <a href="/account">Account</a>
+    <a href="/logout">Logout</a>
+  </nav>
+</header>
+
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <ul class="flashes">
+    {% for category, message in messages %}
+    <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+
+  <section>
+    <h2>Add or Edit a Reminder</h2>
+    <form method="POST">
+      <input type="hidden" id="reminder_id" name="reminder_id">
+      <label for="title">Title:</label><br>
+      <input type="text" id="title" name="title" required><br><br>
+
+      <label for="description">Description:</label><br>
+      <textarea id="description" name="description"></textarea><br><br>
+
+      <label for="date">Date:</label><br>
+      <input type="date" id="date" name="date" required><br><br>
+
+      <label for="hour">Hour:</label>
+      <select name="hour" id="hour">
+        {% for h in range(1, 13) %}
+        <option value="{{ '%02d' % h }}">{{ '%02d' % h }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="minute">Minute:</label>
+      <select name="minute" id="minute">
+        {% for m in range(0, 60) %}
+        <option value="{{ '%02d' % m }}">{{ '%02d' % m }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="ampm">AM/PM:</label>
+      <select name="ampm" id="ampm">
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+      </select><br><br>
+
+      <button type="submit">Save Reminder</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Your Reminders</h2>
+    {% if reminders %}
+    {% for reminder in reminders %}
+    {% if reminder.datetime and ' ' in reminder.datetime %}
+    {% set dt_parts = reminder.datetime.split(' ') %}
+    {% set date_part = dt_parts[0] %}
+    {% set time_parts = dt_parts[1].split(':') %}
+    {% set hour = time_parts[0]|int %}
+    {% set minute = time_parts[1] %}
+    {% set ampm = 'AM' if hour < 12 else 'PM' %}
+    {% set hour_display = hour if 1 <= hour <= 12 else (hour - 12 if hour > 12 else 12) %}
+    {% else %}
+    {% set date_part = '' %}
+    {% set hour_display = '12' %}
+    {% set minute = '00' %}
+    {% set ampm = 'AM' %}
+    {% endif %}
+    <div class="reminder-card">
+      <div class="controls">
+        <form method="POST" action="/delete-reminder">
+          <input type="hidden" name="reminder_id" value="{{ reminder.id }}">
+          <button type="submit">Delete</button>
+        </form>
+        <button class="edit" onclick="populateForm('{{ reminder.id }}', `{{ reminder.title }}`, `{{ reminder.description }}`, '{{ date_part }}', '{{ '%02d' % hour_display }}', '{{ minute }}', '{{ ampm }}')">Edit</button>
+      </div>
+      <div>
+        <strong>{{ reminder.title }}</strong><br>
+        {{ reminder.description }}<br>
+        <em>{{ reminder.datetime }}</em>
+      </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>You don’t have any reminders yet.</p>
+    {% endif %}
+  </section>
+</main>
+</body>
+</html>

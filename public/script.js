@@ -84,7 +84,6 @@ if (loginForm) {
 }
 
 // Replace login button with Account dropdown if user is logged in
-// Replace login button with Account dropdown if user is logged in
 window.addEventListener("DOMContentLoaded", async () => {
     try {
         const res = await fetch("/whoami", {
@@ -109,12 +108,13 @@ window.addEventListener("DOMContentLoaded", async () => {
                         position: absolute;
                         right: 0;
                         background-color: white;
-                        min-width: 120px;
+                        min-width: 140px;
                         box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
                         z-index: 1000;
                         border-radius: 4px;
                     ">
                         <a href="/account" style="display: block; padding: 10px; color: black; text-decoration: none;">Profile</a>
+                        <a href="/dashboard" style="display: block; padding: 10px; color: black; text-decoration: none;">Dashboard</a>
                         <a href="#" id="logout-link" style="display: block; padding: 10px; color: black; text-decoration: none;">Logout</a>
                     </div>
                 </div>
