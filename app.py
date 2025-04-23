@@ -152,6 +152,25 @@ def delete_reminder():
         flash('❌ Reminder not found or unauthorized.', 'error')
     return redirect(url_for('dashboard'))
 
+@app.route('/api/reminders')
+@login_required
+def api_reminders():
+    reminders = Reminder.query.filter_by(user_id=current_user.id).all()
+    events = []
+    for r in reminders:
+        if r.datetime:
+            try:
+                date, time = r.datetime.split(' ')
+                events.append({
+                    'title': r.title,
+                    'start': f"{date}T{time}",
+                    'description': r.description
+                })
+            except ValueError:
+                continue  # Skip malformed datetime
+    return jsonify(events)
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
